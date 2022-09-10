@@ -21,7 +21,6 @@ enum SubCommand {
         /// The file to parse
         #[clap(short, long)]
         file: String,
-
         #[clap(short, long)]
         output: Option<String>,
     },
@@ -32,7 +31,6 @@ enum SubCommand {
         /// The file to parse
         #[clap(short, long)]
         file: String,
-
         #[clap(short, long)]
         output: Option<String>,
     },
@@ -43,7 +41,6 @@ enum SubCommand {
         /// The file to parse
         #[clap(short, long)]
         file: String,
-
         #[clap(short, long)]
         output: Option<String>,
     },
