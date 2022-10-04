@@ -1,4 +1,4 @@
-pub mod errors;
+pub mod error;
 pub mod json;
 pub mod toml;
 pub mod yaml;

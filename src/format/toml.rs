@@ -1,4 +1,4 @@
-use super::errors::Error;
+use super::error::Error;
 
 pub fn serialize<V: serde::Serialize>(v: V) -> Result<String, Error> {
     toml::to_string(&v).map_err(Error::TomlSer)

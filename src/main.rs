@@ -3,8 +3,8 @@ use std::{fs, path::Path};
 use anyhow::{bail, Result};
 use clap::{Parser, Subcommand};
 
-mod formats;
-use formats::{json, toml, yaml, JsonValue, TomlValue, YamlValue};
+mod format;
+use format::{json, toml, yaml, JsonValue, TomlValue, YamlValue};
 
 #[derive(Parser)]
 #[clap(version, about)]
