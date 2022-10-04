@@ -21,6 +21,7 @@ enum SubCommand {
         /// The file to parse
         #[clap(short, long)]
         file: String,
+        /// The output file
         #[clap(short, long)]
         output: Option<String>,
     },
@@ -31,6 +32,7 @@ enum SubCommand {
         /// The file to parse
         #[clap(short, long)]
         file: String,
+        /// The output file
         #[clap(short, long)]
         output: Option<String>,
     },
@@ -41,6 +43,7 @@ enum SubCommand {
         /// The file to parse
         #[clap(short, long)]
         file: String,
+        /// The output file
         #[clap(short, long)]
         output: Option<String>,
     },
@@ -55,6 +58,7 @@ fn main() {
 
 fn run_app(cli: Cli) -> Result<()> {
     use SubCommand::*;
+
     match cli.command {
         Json { file, output } => {
             let value: JsonValue = deserialize_by_type(&file)?;
