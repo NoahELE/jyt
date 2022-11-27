@@ -1,3 +1,4 @@
+//! `toml` related serialization and deserialization
 use super::error::Error;
 
 pub fn serialize<V: serde::Serialize>(v: V) -> Result<String, Error> {

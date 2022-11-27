@@ -1,3 +1,4 @@
+//! Errors that might occur during serialization and deserialization.
 use thiserror::Error;
 
 #[derive(Error, Debug)]

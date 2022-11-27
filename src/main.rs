@@ -92,9 +92,9 @@ fn deserialize_by_type<V>(file: &str) -> Result<V>
 where
     V: for<'de> serde::Deserialize<'de>,
 {
-    let path = Path::new(file);
-    let content = fs::read_to_string(path)?;
-    match path.extension() {
+    let file_path = Path::new(file);
+    let content = fs::read_to_string(file_path)?;
+    match file_path.extension() {
         Some(ext) => {
             let ext = ext.to_str().expect("Converting `OsStr` to `&str` failed");
             match ext {
@@ -104,6 +104,6 @@ where
                 _ => bail!("Unknown extension ({})", ext),
             }
         }
-        None => bail!("File ({}) do not have a extension", file),
+        None => bail!("File ({}) does not have a extension", file),
     }
 }
