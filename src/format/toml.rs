@@ -2,7 +2,7 @@
 use super::error::Error;
 
 pub fn serialize<V: serde::Serialize>(v: V) -> Result<String, Error> {
-    toml::to_string(&v).map_err(Error::TomlSer)
+    toml::to_string_pretty(&v).map_err(Error::TomlSer)
 }
 
 pub fn deserialize<V>(s: &str) -> Result<V, Error>

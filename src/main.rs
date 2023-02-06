@@ -1,6 +1,6 @@
 use std::{fs, path::Path};
 
-use anyhow::{bail, Result};
+use anyhow::{bail, Ok, Result};
 use clap::{Parser, Subcommand};
 
 mod format;
@@ -52,7 +52,7 @@ enum SubCommand {
 fn main() {
     let cli = Cli::parse();
     if let Err(e) = run_app(cli) {
-        println!("{}", e);
+        eprintln!("{e}");
     }
 }
 
@@ -63,28 +63,31 @@ fn run_app(cli: Cli) -> Result<()> {
         Json { file, output } => {
             let value: JsonValue = deserialize_by_type(&file)?;
             let s = json::serialize(value)?;
-            print!("{}", s);
+            print!("{s}");
             if let Some(output) = output {
                 fs::write(output, s)?;
             }
         }
+
         Yaml { file, output } => {
             let value: YamlValue = deserialize_by_type(&file)?;
             let s = yaml::serialize(value)?;
-            print!("{}", s);
+            print!("{s}");
             if let Some(output) = output {
                 fs::write(output, s)?;
             }
         }
+
         Toml { file, output } => {
             let value: TomlValue = deserialize_by_type(&file)?;
             let s = toml::serialize(value)?;
-            print!("{}", s);
+            print!("{s}");
             if let Some(output) = output {
                 fs::write(output, s)?;
             }
         }
     };
+
     Ok(())
 }
 
@@ -98,12 +101,12 @@ where
         Some(ext) => {
             let ext = ext.to_str().expect("Converting `OsStr` to `&str` failed");
             match ext {
-                "json" => json::deserialize(&content).map_err(|e| e.into()),
-                "yaml" | "yml" => yaml::deserialize(&content).map_err(|e| e.into()),
-                "toml" => toml::deserialize(&content).map_err(|e| e.into()),
-                _ => bail!("Unknown extension ({})", ext),
+                "json" => json::deserialize(&content).map_err(Into::into),
+                "yaml" | "yml" => yaml::deserialize(&content).map_err(Into::into),
+                "toml" => toml::deserialize(&content).map_err(Into::into),
+                _ => bail!("Unknown extension {}", ext),
             }
         }
-        None => bail!("File ({}) does not have a extension", file),
+        None => bail!("File {} does not have a extension", file),
     }
 }
