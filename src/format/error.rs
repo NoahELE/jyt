@@ -2,7 +2,7 @@
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum SerError {
+pub(crate) enum SerError {
     #[error("JSON serialize error {0}")]
     Json(#[from] serde_json::Error),
 
@@ -14,7 +14,7 @@ pub enum SerError {
 }
 
 #[derive(Error, Debug)]
-pub enum DeError {
+pub(crate) enum DeError {
     #[error("JSON deserialize error {0}")]
     Json(#[from] serde_json::Error),
 

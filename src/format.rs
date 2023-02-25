@@ -1,10 +1,10 @@
 //! Provide a general way of converting different format,
 //! currently include json, yaml and toml. (powered by serde)
-pub mod error;
-pub mod json;
-pub mod toml;
-pub mod yaml;
+pub(crate) mod error;
+pub(crate) mod json;
+pub(crate) mod toml;
+pub(crate) mod yaml;
 
-pub use ::toml::Value as TomlValue;
-pub use serde_json::Value as JsonValue;
-pub use serde_yaml::Value as YamlValue;
+pub(crate) use ::toml::Value as TomlValue;
+pub(crate) use serde_json::Value as JsonValue;
+pub(crate) use serde_yaml::Value as YamlValue;
