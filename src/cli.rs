@@ -1,6 +1,6 @@
 use std::{fs, path::Path};
 
-use anyhow::{bail, Ok, Result};
+use anyhow::{bail, Result};
 use clap::{Parser, Subcommand};
 
 use crate::format::{json, toml, yaml, JsonValue, TomlValue, YamlValue};
