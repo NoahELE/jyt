@@ -1,13 +1,15 @@
 //! `toml` related serialization and deserialization
-use super::error::Error;
+use serde::{Deserialize, Serialize};
 
-pub fn serialize<V: serde::Serialize>(v: V) -> Result<String, Error> {
-    toml::to_string_pretty(&v).map_err(Error::TomlSer)
+use super::error::{DeError, SerError};
+
+pub fn serialize<V: Serialize>(v: V) -> Result<String, SerError> {
+    toml::to_string_pretty(&v).map_err(Into::into)
 }
 
-pub fn deserialize<V>(s: &str) -> Result<V, Error>
+pub fn deserialize<V>(s: &str) -> Result<V, DeError>
 where
-    V: for<'de> serde::Deserialize<'de>,
+    V: for<'de> Deserialize<'de>,
 {
-    toml::from_str(s).map_err(Error::TomlDe)
+    toml::from_str(s).map_err(Into::into)
 }

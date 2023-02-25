@@ -2,22 +2,25 @@
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum Error {
+pub enum SerError {
     #[error("JSON serialize error {0}")]
-    JsonSer(serde_json::Error),
-
-    #[error("JSON deserialize error {0}")]
-    JsonDe(serde_json::Error),
+    Json(#[from] serde_json::Error),
 
     #[error("YAML serialize error {0}")]
-    YamlSer(serde_yaml::Error),
-
-    #[error("YAML deserialize error {0}")]
-    YamlDe(serde_yaml::Error),
+    Yaml(#[from] serde_yaml::Error),
 
     #[error("TOML serialize error {0}")]
-    TomlSer(toml::ser::Error),
+    Toml(#[from] toml::ser::Error),
+}
+
+#[derive(Error, Debug)]
+pub enum DeError {
+    #[error("JSON deserialize error {0}")]
+    Json(#[from] serde_json::Error),
+
+    #[error("YAML deserialize error {0}")]
+    Yaml(#[from] serde_yaml::Error),
 
     #[error("TOML deserialize error {0}")]
-    TomlDe(toml::de::Error),
+    Toml(#[from] toml::de::Error),
 }

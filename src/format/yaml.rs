@@ -1,13 +1,15 @@
 //! `yaml` related serialization and deserialization
-use super::error::Error;
+use serde::{Deserialize, Serialize};
 
-pub fn serialize<V: serde::Serialize>(v: V) -> Result<String, Error> {
-    serde_yaml::to_string(&v).map_err(Error::YamlSer)
+use super::error::{DeError, SerError};
+
+pub fn serialize<V: Serialize>(v: V) -> Result<String, SerError> {
+    serde_yaml::to_string(&v).map_err(Into::into)
 }
 
-pub fn deserialize<V>(s: &str) -> Result<V, Error>
+pub fn deserialize<V>(s: &str) -> Result<V, DeError>
 where
-    V: for<'de> serde::Deserialize<'de>,
+    V: for<'de> Deserialize<'de>,
 {
-    serde_yaml::from_str(s).map_err(Error::YamlDe)
+    serde_yaml::from_str(s).map_err(Into::into)
 }
