@@ -3,11 +3,11 @@ use serde::{Deserialize, Serialize};
 
 use super::error::{DeError, SerError};
 
-pub(crate) fn serialize<V: Serialize>(v: V) -> Result<String, SerError> {
+pub fn serialize<V: Serialize>(v: V) -> Result<String, SerError> {
     serde_yaml::to_string(&v).map_err(Into::into)
 }
 
-pub(crate) fn deserialize<V>(s: &str) -> Result<V, DeError>
+pub fn deserialize<V>(s: &str) -> Result<V, DeError>
 where
     V: for<'de> Deserialize<'de>,
 {

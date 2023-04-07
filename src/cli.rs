@@ -7,16 +7,17 @@ use crate::format::{json, toml, yaml, JsonValue, TomlValue, YamlValue};
 
 #[derive(Parser)]
 #[clap(version, about)]
-pub(crate) struct Cli {
+pub struct Cli {
     #[clap(subcommand)]
     command: SubCommand,
 }
 
+#[allow(clippy::enum_variant_names)]
 #[derive(Subcommand)]
 enum SubCommand {
     /// Convert input to json
     #[clap(name = "to-json")]
-    Json {
+    ToJson {
         /// The file to parse
         #[clap(short, long)]
         file: String,
@@ -27,7 +28,7 @@ enum SubCommand {
 
     /// Convert input to json
     #[clap(name = "to-yaml")]
-    Yaml {
+    ToYaml {
         /// The file to parse
         #[clap(short, long)]
         file: String,
@@ -38,7 +39,7 @@ enum SubCommand {
 
     /// Convert input to json
     #[clap(name = "to-toml")]
-    Toml {
+    ToToml {
         /// The file to parse
         #[clap(short, long)]
         file: String,
@@ -48,34 +49,40 @@ enum SubCommand {
     },
 }
 
-pub(crate) fn run_app(cli: Cli) -> Result<()> {
+pub fn run_cli(cli: Cli) -> Result<()> {
     use SubCommand::*;
 
     match cli.command {
-        Json { file, output } => {
+        ToJson { file, output } => {
             let value: JsonValue = deserialize_by_file_type(&file)?;
             let s = json::serialize(value)?;
-            print!("{s}");
+            // if output file is given, write to file, otherwise print to stdout
             if let Some(output) = output {
                 fs::write(output, s)?;
+            } else {
+                print!("{s}");
             }
         }
 
-        Yaml { file, output } => {
+        ToYaml { file, output } => {
             let value: YamlValue = deserialize_by_file_type(&file)?;
             let s = yaml::serialize(value)?;
-            print!("{s}");
+            // if output file is given, write to file, otherwise print to stdout
             if let Some(output) = output {
                 fs::write(output, s)?;
+            } else {
+                print!("{s}");
             }
         }
 
-        Toml { file, output } => {
+        ToToml { file, output } => {
             let value: TomlValue = deserialize_by_file_type(&file)?;
             let s = toml::serialize(value)?;
-            print!("{s}");
+            // if output file is given, write to file, otherwise print to stdout
             if let Some(output) = output {
                 fs::write(output, s)?;
+            } else {
+                print!("{s}");
             }
         }
     };
