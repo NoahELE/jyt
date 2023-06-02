@@ -6,9 +6,9 @@ use clap::{Parser, Subcommand};
 use crate::format::{json, toml, yaml, JsonValue, TomlValue, YamlValue};
 
 #[derive(Parser)]
-#[clap(version, about)]
+#[command(version, about)]
 pub struct Cli {
-    #[clap(subcommand)]
+    #[command(subcommand)]
     command: SubCommand,
 }
 
@@ -16,35 +16,35 @@ pub struct Cli {
 #[derive(Subcommand)]
 enum SubCommand {
     /// Convert input to json
-    #[clap(name = "to-json")]
+    #[command(name = "to-json")]
     ToJson {
         /// The file to parse
-        #[clap(short, long)]
+        #[arg(short, long)]
         file: String,
         /// The output file
-        #[clap(short, long)]
+        #[arg(short, long)]
         output: Option<String>,
     },
 
     /// Convert input to json
-    #[clap(name = "to-yaml")]
+    #[command(name = "to-yaml")]
     ToYaml {
         /// The file to parse
-        #[clap(short, long)]
+        #[arg(short, long)]
         file: String,
         /// The output file
-        #[clap(short, long)]
+        #[arg(short, long)]
         output: Option<String>,
     },
 
     /// Convert input to json
-    #[clap(name = "to-toml")]
+    #[command(name = "to-toml")]
     ToToml {
         /// The file to parse
-        #[clap(short, long)]
+        #[arg(short, long)]
         file: String,
         /// The output file
-        #[clap(short, long)]
+        #[arg(short, long)]
         output: Option<String>,
     },
 }
