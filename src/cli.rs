@@ -50,10 +50,8 @@ enum SubCommand {
 }
 
 pub fn run_cli(cli: Cli) -> Result<()> {
-    use SubCommand::*;
-
     match cli.command {
-        ToJson { file, output } => {
+        SubCommand::ToJson { file, output } => {
             let value: JsonValue = deserialize_by_file_type(&file)?;
             let s = json::serialize(value)?;
             // if output file is given, write to file, otherwise print to stdout
@@ -64,7 +62,7 @@ pub fn run_cli(cli: Cli) -> Result<()> {
             }
         }
 
-        ToYaml { file, output } => {
+        SubCommand::ToYaml { file, output } => {
             let value: YamlValue = deserialize_by_file_type(&file)?;
             let s = yaml::serialize(value)?;
             // if output file is given, write to file, otherwise print to stdout
@@ -75,7 +73,7 @@ pub fn run_cli(cli: Cli) -> Result<()> {
             }
         }
 
-        ToToml { file, output } => {
+        SubCommand::ToToml { file, output } => {
             let value: TomlValue = deserialize_by_file_type(&file)?;
             let s = toml::serialize(value)?;
             // if output file is given, write to file, otherwise print to stdout
@@ -98,11 +96,15 @@ where
     let content = fs::read_to_string(file_path)?;
     match file_path.extension() {
         Some(ext) => {
-            let ext = ext.to_str().expect("Converting `OsStr` to `&str` failed");
-            match ext {
-                "json" => json::deserialize(&content).map_err(Into::into),
-                "yaml" | "yml" => yaml::deserialize(&content).map_err(Into::into),
-                "toml" => toml::deserialize(&content).map_err(Into::into),
+            let ext = ext
+                .to_str()
+                .expect("Converting `OsStr` to `&str` failed")
+                .trim()
+                .to_lowercase();
+            match ext.as_str() {
+                "json" => json::deserialize(&content).map_err(|e| e.into()),
+                "yaml" | "yml" => yaml::deserialize(&content).map_err(|e| e.into()),
+                "toml" => toml::deserialize(&content).map_err(|e| e.into()),
                 _ => bail!("Unknown extension {}", ext),
             }
         }
