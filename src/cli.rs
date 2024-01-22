@@ -12,12 +12,11 @@ pub struct Cli {
     command: SubCommand,
 }
 
-#[allow(clippy::enum_variant_names)]
 #[derive(Subcommand)]
 enum SubCommand {
     /// Convert input to json
     #[command(name = "to-json")]
-    ToJson {
+    Json {
         /// The file to parse
         #[arg(short, long)]
         file: String,
@@ -28,7 +27,7 @@ enum SubCommand {
 
     /// Convert input to json
     #[command(name = "to-yaml")]
-    ToYaml {
+    Yaml {
         /// The file to parse
         #[arg(short, long)]
         file: String,
@@ -39,7 +38,7 @@ enum SubCommand {
 
     /// Convert input to json
     #[command(name = "to-toml")]
-    ToToml {
+    Toml {
         /// The file to parse
         #[arg(short, long)]
         file: String,
@@ -51,7 +50,7 @@ enum SubCommand {
 
 pub fn run_cli(cli: Cli) -> Result<()> {
     match cli.command {
-        SubCommand::ToJson { file, output } => {
+        SubCommand::Json { file, output } => {
             let value: JsonValue = deserialize_by_file_type(&file)?;
             let s = json::serialize(value)?;
             // if output file is given, write to file, otherwise print to stdout
@@ -62,7 +61,7 @@ pub fn run_cli(cli: Cli) -> Result<()> {
             }
         }
 
-        SubCommand::ToYaml { file, output } => {
+        SubCommand::Yaml { file, output } => {
             let value: YamlValue = deserialize_by_file_type(&file)?;
             let s = yaml::serialize(value)?;
             // if output file is given, write to file, otherwise print to stdout
@@ -73,7 +72,7 @@ pub fn run_cli(cli: Cli) -> Result<()> {
             }
         }
 
-        SubCommand::ToToml { file, output } => {
+        SubCommand::Toml { file, output } => {
             let value: TomlValue = deserialize_by_file_type(&file)?;
             let s = toml::serialize(value)?;
             // if output file is given, write to file, otherwise print to stdout
@@ -102,12 +101,13 @@ where
                 .trim()
                 .to_lowercase();
             match ext.as_str() {
-                "json" => json::deserialize(&content).map_err(|e| e.into()),
-                "yaml" | "yml" => yaml::deserialize(&content).map_err(|e| e.into()),
-                "toml" => toml::deserialize(&content).map_err(|e| e.into()),
-                _ => bail!("Unknown extension {}", ext),
+                "json" => json::deserialize(&content),
+                "yaml" | "yml" => yaml::deserialize(&content),
+                "toml" => toml::deserialize(&content),
+                _ => bail!("Unknown extension {ext}"),
             }
+            .map_err(|e| e.into())
         }
-        None => bail!("File {} does not have a extension", file),
+        None => bail!("File {file} does not have a extension"),
     }
 }
