@@ -1,6 +1,6 @@
 use std::{fs, path::Path};
 
-use anyhow::{bail, Result};
+use anyhow::{anyhow, bail, Result};
 use clap::{Parser, Subcommand};
 
 use crate::format::{json, toml, yaml, JsonValue, TomlValue, YamlValue};
@@ -97,7 +97,7 @@ where
         Some(ext) => {
             let ext = ext
                 .to_str()
-                .expect("Converting `OsStr` to `&str` failed")
+                .ok_or(anyhow!("Converting `OsStr` to `&str` failed"))?
                 .trim()
                 .to_lowercase();
             match ext.as_str() {
