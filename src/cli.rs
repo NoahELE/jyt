@@ -2,6 +2,7 @@ use std::{fs, path::Path};
 
 use anyhow::{anyhow, bail, Result};
 use clap::{Parser, Subcommand};
+use serde::Deserialize;
 
 use crate::format::{json, toml, yaml, JsonValue, TomlValue, YamlValue};
 
@@ -89,7 +90,7 @@ pub fn run_cli(cli: Cli) -> Result<()> {
 
 fn deserialize_by_file_type<V>(file: &str) -> Result<V>
 where
-    V: for<'de> serde::Deserialize<'de>,
+    V: for<'de> Deserialize<'de>,
 {
     let file_path = Path::new(file);
     let content = fs::read_to_string(file_path)?;
