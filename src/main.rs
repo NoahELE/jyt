@@ -3,11 +3,11 @@ use clap::Parser;
 mod cli;
 mod format;
 
-use cli::{run_cli, Cli};
+use cli::Cli;
 
 fn main() {
     let cli = Cli::parse();
-    if let Err(e) = run_cli(cli) {
+    if let Err(e) = cli.run() {
         eprintln!("{e}");
     }
 }

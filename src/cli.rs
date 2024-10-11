@@ -13,6 +13,47 @@ pub struct Cli {
     command: SubCommand,
 }
 
+impl Cli {
+    pub fn run(self) -> Result<()> {
+        match self.command {
+            SubCommand::Json { file, output } => {
+                let value: JsonValue = deserialize_by_file_type(&file)?;
+                let s = json::serialize(value)?;
+                // if output file is given, write to file, otherwise print to stdout
+                if let Some(output) = output {
+                    fs::write(output, s)?;
+                } else {
+                    print!("{s}");
+                }
+            }
+
+            SubCommand::Yaml { file, output } => {
+                let value: YamlValue = deserialize_by_file_type(&file)?;
+                let s = yaml::serialize(value)?;
+                // if output file is given, write to file, otherwise print to stdout
+                if let Some(output) = output {
+                    fs::write(output, s)?;
+                } else {
+                    print!("{s}");
+                }
+            }
+
+            SubCommand::Toml { file, output } => {
+                let value: TomlValue = deserialize_by_file_type(&file)?;
+                let s = toml::serialize(value)?;
+                // if output file is given, write to file, otherwise print to stdout
+                if let Some(output) = output {
+                    fs::write(output, s)?;
+                } else {
+                    print!("{s}");
+                }
+            }
+        };
+
+        Ok(())
+    }
+}
+
 #[derive(Subcommand)]
 enum SubCommand {
     /// Convert input to json
@@ -47,45 +88,6 @@ enum SubCommand {
         #[arg(short, long)]
         output: Option<String>,
     },
-}
-
-pub fn run_cli(cli: Cli) -> Result<()> {
-    match cli.command {
-        SubCommand::Json { file, output } => {
-            let value: JsonValue = deserialize_by_file_type(&file)?;
-            let s = json::serialize(value)?;
-            // if output file is given, write to file, otherwise print to stdout
-            if let Some(output) = output {
-                fs::write(output, s)?;
-            } else {
-                print!("{s}");
-            }
-        }
-
-        SubCommand::Yaml { file, output } => {
-            let value: YamlValue = deserialize_by_file_type(&file)?;
-            let s = yaml::serialize(value)?;
-            // if output file is given, write to file, otherwise print to stdout
-            if let Some(output) = output {
-                fs::write(output, s)?;
-            } else {
-                print!("{s}");
-            }
-        }
-
-        SubCommand::Toml { file, output } => {
-            let value: TomlValue = deserialize_by_file_type(&file)?;
-            let s = toml::serialize(value)?;
-            // if output file is given, write to file, otherwise print to stdout
-            if let Some(output) = output {
-                fs::write(output, s)?;
-            } else {
-                print!("{s}");
-            }
-        }
-    };
-
-    Ok(())
 }
 
 fn deserialize_by_file_type<V>(file: &str) -> Result<V>
